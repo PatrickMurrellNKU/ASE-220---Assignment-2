@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>A page that enables the restaurant manager to create new items and add them to the menu</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	</head>
+	<body class="container">
+		<a href="index.html"><-- back to Article Management</a>
+		<h1>Create a new Article</h1>
+		<form id="create">
+			<label>Title</label><br />
+			<input name="Title" type="text" />
+			<br /><br />
+			
+			<label>Date</label><br />
+			<input name="Date" type="text" />
+			<br /><br />
+
+			<label>Author</label><br />
+			<input name="Author" type="text" />
+			<br /><br />
+
+			<label>Tags</label><br />
+			<input name="Tags" type="text" />
+			<br /><br />
+
+			<label>Content</label><br />
+			<textarea name="Content" rows="20" cols="30"></textarea>
+			<br /><br />
+
+			<label>Image URL</label><br />
+			<input name="FeaturedImage" type="url" />
+			<br /><br />
+
+			<button type="submit">Submit</button>
+		</form>
+		<script src="../assets/jquery-3.5.1.min.js"></script>
+		<script src="../assets/app.js"></script>
+		<script>
+			$(document).on('submit','#create',function(e){
+				//tell the browser to ignore the default event handler
+				e.preventDefault();
+				// 1. download the JSON database from the server
+				$.getJSON(jsonBlobURL,function(data){
+					console.log(data);
+					// 2. add the item to the array of menu items
+					var item={
+						Date:$('input[name="Date"]').val(),
+						Title:$('input[name="Title"]').val(),
+						Author:$('input[name="Author"]').val(),
+						Content:$('textarea[name="Content"]').val(),
+						FeaturedImage:$('input[name="FeaturedImage"]').val(),
+						Tags:$('input[name="Tags"]').val(),
+						Views: "0",
+						Likes: "0"
+					};
+					data.push(item);
+					console.log(data);
+					// 3. make a put request to update the entire database
+					$.ajax({
+						type: "PUT",
+						url:jsonBlobURL,
+						contentType: "application/json",
+						data: JSON.stringify(data),
+						success: function(output, status, xhr) { 
+						console.log(xhr);
+						  console.log(xhr.getResponseHeader("Location"));
+						  window.location.href="index.html"
+						}
+					});
+					
+				});
+			});
+		</script>
+	</body>
+</html>

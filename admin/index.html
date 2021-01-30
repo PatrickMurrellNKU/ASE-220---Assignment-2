@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Articles</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	</head>
+	<body class="container">
+		<h1>Article Management</h1>
+		<a href="create.html">Add a new article</a>
+		<br>
+		<ul id="Articles">
+		</ul>
+		<script src="../assets/jquery-3.5.1.min.js"></script>
+		<script src="../assets/app.js"></script>
+		<script>
+			$.getJSON(jsonBlobURL,function(data){
+				for(var i=0;i<data.length;i++){
+					$('#Articles').append('<li style="list-style-type: none;"><a href="../article.html?index='+i+'"><img src="'+data[i].FeaturedImage+'"" width=75px>   <strong>'+data[i].Title+'</strong>  '+ data[i].Author  +' - <em>'+data[i].Date+'</em></a> [<a href="edit.html?index='+i+'">edit</a>]</li><br>');
+				}
+			});
+		</script>
+	</body>
+</html>

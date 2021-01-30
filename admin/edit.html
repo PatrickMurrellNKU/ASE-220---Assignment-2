@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Edit the Article</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	</head>
+	<body class="container"> 
+		<a href="index.html"> <-- back to Article Management</a>
+		<h1>Edit Article</h1>
+		<form id="edit">
+
+			<label>Title</label><br />
+			<input name="Title" type="text" />
+			<br /><br />
+			
+			<label>Date</label><br />
+			<input name="Date" type="text" />
+			<br /><br />
+
+			<label>Author</label><br />
+			<input name="Author" type="text" />
+			<br /><br />
+
+			<label>Tags</label><br />
+			<input name="Tags" type="text" />
+			<br /><br />
+
+			<label>Content</label><br />
+			<textarea name="Content" rows="20" cols="30"></textarea>
+			<br /><br />
+
+			<label>Image URL</label><br />
+			<input name="FeaturedImage" type="url" />
+			<br /><br />
+
+			<button type="submit">Submit</button>
+		</form>
+		<script src="../assets/jquery-3.5.1.min.js"></script>
+		<script src="../assets/app.js"></script>
+		<script>
+			
+		$.getJSON(jsonBlobURL,function(data){
+			var index=findGetParameter('index');
+			$('input[name="Date"]').val(data[index].Date);
+			$('input[name="Title"]').val(data[index].Title);
+			$('input[name="Author"]').val(data[index].Author);
+			$('input[name="Tags"]').val(data[index].Tags);
+			$('input[name="FeaturedImage"]').val(data[index].FeaturedImage);
+			$('textarea[name="Content"]').val(data[index].Content);
+		});
+		
+		$(document).on('submit','#edit',function(e){
+			//tell the browser to ignore the default event handler
+			e.preventDefault();
+			// 1. save the field values in an item
+			var item={
+				Date:$('input[name="Date"]').val(),
+				Title:$('input[name="Title"]').val(),
+				Author:$('input[name="Author"]').val(),
+				Content:$('textarea[name="Content"]').val(),
+				FeaturedImage:$('input[name="FeaturedImage"]').val(),
+				Tags:$('input[name="Tags"]').val(),
+			};
+			console.log(item);
+			
+			// 2. Download the JSON file from the server
+			$.getJSON(jsonBlobURL,function(data){
+				
+				//3. Replace the item with index=the current index
+				var index=findGetParameter('index');
+				oldViews = data[index].Views
+				oldLikes = data[index].Likes
+				data[index]=item;
+				data[index].Views = oldViews
+				data[index].Likes = oldLikes
+				//4. Update the information on the server (PUT request);
+				$.ajax({
+					type: "PUT",
+					url:jsonBlobURL,
+					contentType: "application/json",
+					data: JSON.stringify(data),
+					success: function(output, status, xhr) { 
+					console.log(xhr);
+					  console.log(xhr.getResponseHeader("Location"));
+					  window.location.href="index.html"
+					}
+				});
+			});
+		});
+		</script>
+	</body>
+</html>

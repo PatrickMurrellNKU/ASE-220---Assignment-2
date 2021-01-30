@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patrick Murrell's Blog</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="assets/jquery-3.5.1.min.js"></script>
+    <script src="assets/app.js"></script>
+</head>
+<body class="container"> 
+    <h1>Hello, and welcome to my Blog!</h1>
+    <ul id="blogpost"></ul>
+    <script>
+        $.getJSON(jsonBlobURL,function(data){
+				for(var i=0;i<data.length;i++){
+					$('#blogpost').append('<li style="list-style-type: none;"><a href="article.html?index='+i+'"><img src="'+data[i].FeaturedImage+'"" width=75px>   <strong>'+data[i].Title+'</strong>  '+ data[i].Author  +' - <em>'+data[i].Date+'</em></a></li><br>');
+				}
+			});
+    </script>
+</body>
+</html>
